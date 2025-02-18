@@ -6,22 +6,27 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
-
   if (!config.headers) {
     config.headers = {} as any;
   }
-
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    if (typeof config.headers.set === "function") {
+      config.headers.set("Authorization", `Bearer ${token}`);
+    } else {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
   }
-
   return config;
 });
 
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      window.location.pathname !== "/login"
+    ) {
       localStorage.removeItem("token");
       window.location.href = "/login";
     }

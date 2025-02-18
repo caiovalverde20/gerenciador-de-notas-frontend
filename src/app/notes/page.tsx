@@ -1,6 +1,5 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { fetchNotes, createNote, Note } from "@/services/notesService";
 import NoteCard from "@/components/NoteCard";
@@ -13,45 +12,33 @@ export default function NotesPage() {
   const user = useUser();
   const router = useRouter();
 
-  const loadNotes = async () => {
+  const loadNotes = useCallback(async () => {
     try {
       const data = await fetchNotes();
       setNotes(data);
-    } catch (error: any) {
-      if (error.response?.status === 401) {
-        router.push("/login");
-      }
+    } catch (error: unknown) {
+      router.push("/login");
     }
-  };
+  }, [router]);
 
   useEffect(() => {
     loadNotes();
-  }, []);
+  }, [loadNotes]);
 
-  const handleCreate = async () => {
+  const handleCreate = useCallback(async () => {
     try {
-      await createNote({
-          title: "Nova Nota", description: "",
-          favorite: false
-      });
+      await createNote({ title: "Nova Nota", description: "", favorite: false });
       loadNotes();
-    } catch (error: any) {
-      if (error.response?.status === 401) {
-        router.push("/login");
-      }
+    } catch (error: unknown) {
+      router.push("/login");
     }
-  };
+  }, [loadNotes, router]);
 
   return (
     <div className="flex flex-col p-4 md:p-6 min-h-screen bg-gray-100">
       {user && (
-        <Header
-          userName={user.name}
-          onSearch={setSearchQuery}
-          onAddNote={handleCreate}
-        />
+        <Header userName={user.name} onSearch={setSearchQuery} onAddNote={handleCreate} />
       )}
-
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {notes
           .filter(

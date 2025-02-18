@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { updateNote, deleteNote, toggleFavorite, Note } from "@/services/notesService";
 
@@ -6,27 +7,23 @@ interface NoteCardProps {
   onNoteUpdate: () => void;
 }
 
-const COLORS = [
-    "bg-yellow-200",
-    "bg-orange-200",
-    "bg-green-200",
-    "bg-purple-200",
-    "bg-blue-200",
-    "bg-pink-200",
-    "bg-red-200",
-    "bg-indigo-200",
-    "bg-teal-200",
-    "bg-lime-200",
-  ];
-  
-
 export default function NoteCard({ note, onNoteUpdate }: NoteCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(note.title);
   const [description, setDescription] = useState(note.description);
-
   const [fixedColor] = useState(
-    COLORS[Math.floor(Math.random() * COLORS.length)]
+    [
+      "bg-yellow-200",
+      "bg-orange-200",
+      "bg-green-200",
+      "bg-purple-200",
+      "bg-blue-200",
+      "bg-pink-200",
+      "bg-red-200",
+      "bg-indigo-200",
+      "bg-teal-200",
+      "bg-lime-200",
+    ][Math.floor(Math.random() * 10)]
   );
 
   const handleUpdate = async () => {
@@ -46,7 +43,7 @@ export default function NoteCard({ note, onNoteUpdate }: NoteCardProps) {
   };
 
   return (
-    <div className={`relative p-6 rounded-lg shadow-md ${fixedColor} text-black min-h-[200px] flex flex-col`}>
+    <div className={`relative p-6 rounded-lg shadow-md ${fixedColor} text-black h-[300px] flex flex-col`}>
       <button
         onClick={handleToggleFavorite}
         className="absolute top-2 right-2 text-xl text-yellow-600"
@@ -54,7 +51,6 @@ export default function NoteCard({ note, onNoteUpdate }: NoteCardProps) {
       >
         {note.favorite ? "★" : "☆"}
       </button>
-
       {isEditing ? (
         <div>
           <input
@@ -78,7 +74,7 @@ export default function NoteCard({ note, onNoteUpdate }: NoteCardProps) {
         <div className="flex flex-col h-full">
           <div>
             <h3 className="text-lg font-semibold mb-2">{note.title}</h3>
-            <div className="max-h-40 overflow-y-auto">
+            <div className="h-32 overflow-y-auto">
               <p>{note.description}</p>
             </div>
           </div>

@@ -12,15 +12,14 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
-
     try {
       const data = await login(email, password);
       localStorage.setItem("token", data.token);
       router.push("/notes");
-    } catch (err) {
+    } catch {
       setError("Credenciais inválidas. Tente novamente.");
     }
   };
