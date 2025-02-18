@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { updateNote, deleteNote, Note } from "@/services/notesService";
+import { updateNote, deleteNote, toggleFavorite, Note } from "@/services/notesService";
 
 interface NoteCardProps {
   note: Note;
@@ -19,7 +19,6 @@ export default function NoteCard({ note, onNoteUpdate }: NoteCardProps) {
   const [title, setTitle] = useState(note.title);
   const [description, setDescription] = useState(note.description);
 
-  // Define a cor fixa apenas uma vez quando o componente é montado
   const [fixedColor] = useState(
     COLORS[Math.floor(Math.random() * COLORS.length)]
   );
@@ -35,8 +34,21 @@ export default function NoteCard({ note, onNoteUpdate }: NoteCardProps) {
     onNoteUpdate();
   };
 
+  const handleToggleFavorite = async () => {
+    await toggleFavorite(note._id);
+    onNoteUpdate();
+  };
+
   return (
-    <div className={`p-6 rounded-lg shadow-md ${fixedColor} text-black min-h-[200px] flex flex-col`}>
+    <div className={`relative p-6 rounded-lg shadow-md ${fixedColor} text-black min-h-[200px] flex flex-col`}>
+      <button
+        onClick={handleToggleFavorite}
+        className="absolute top-2 right-2 text-xl text-yellow-600"
+        title="Alternar favorito"
+      >
+        {note.favorite ? "★" : "☆"}
+      </button>
+
       {isEditing ? (
         <div>
           <input

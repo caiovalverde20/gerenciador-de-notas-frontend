@@ -30,7 +30,10 @@ export default function NotesPage() {
 
   const handleCreate = async () => {
     try {
-      await createNote({ title: "Nova Nota", description: "" });
+      await createNote({
+          title: "Nova Nota", description: "",
+          favorite: false
+      });
       loadNotes();
     } catch (error: any) {
       if (error.response?.status === 401) {

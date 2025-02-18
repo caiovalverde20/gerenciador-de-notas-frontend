@@ -4,6 +4,7 @@ export interface Note {
     _id: string;
     title: string;
     description: string;
+    favorite: boolean;
   }
 
 export const fetchNotes = async (): Promise<Note[]> => {
@@ -24,3 +25,8 @@ export const createNote = async (note: Omit<Note, "_id">): Promise<Note> => {
 export const deleteNote = async (id: string): Promise<void> => {
     await api.delete(`/notes/${id}`);
 };
+
+export const toggleFavorite = async (id: string): Promise<Note> => {
+    const res = await api.post(`/notes/${id}/favorite`);
+    return res.data;
+  };
