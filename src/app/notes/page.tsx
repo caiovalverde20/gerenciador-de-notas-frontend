@@ -16,7 +16,7 @@ export default function NotesPage() {
     try {
       const data = await fetchNotes();
       setNotes(data);
-    } catch (error: unknown) {
+    } catch {
       router.push("/login");
     }
   }, [router]);
@@ -29,7 +29,7 @@ export default function NotesPage() {
     try {
       await createNote({ title: "Nova Nota", description: "", favorite: false });
       loadNotes();
-    } catch (error: unknown) {
+    } catch {
       router.push("/login");
     }
   }, [loadNotes, router]);

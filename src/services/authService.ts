@@ -9,7 +9,7 @@ export const registerUser = async (data: { name: string; email: string; password
   try {
     await api.post("/auth/signup", data);
     return { success: true, message: "Cadastro realizado com sucesso!" };
-  } catch (error: unknown) {
+  } catch {
     return { success: false, message: "Erro ao cadastrar. Verifique os dados." };
   }
 };

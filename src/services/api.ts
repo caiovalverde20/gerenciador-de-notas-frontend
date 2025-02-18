@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosRequestHeaders } from "axios";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000",
@@ -7,14 +7,10 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (!config.headers) {
-    config.headers = {} as any;
+    config.headers = {} as AxiosRequestHeaders;
   }
   if (token) {
-    if (typeof config.headers.set === "function") {
-      config.headers.set("Authorization", `Bearer ${token}`);
-    } else {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });

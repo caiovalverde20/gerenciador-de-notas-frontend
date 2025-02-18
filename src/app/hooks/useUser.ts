@@ -17,7 +17,7 @@ export function useUser() {
       try {
         const res = await api.get("/user");
         setUser(res.data);
-      } catch (error: unknown) {
+      } catch {
         router.push("/login");
       }
     }
