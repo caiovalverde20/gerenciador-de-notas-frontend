@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import api from "@/services/api";
+import { login } from "@/services/authService";
+import Input from "@/components/Input";
+import Button from "@/components/Button";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -15,8 +17,8 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const res = await api.post("/auth/login", { email, password });
-      localStorage.setItem("token", res.data.token);
+      const data = await login(email, password);
+      localStorage.setItem("token", data.token);
       router.push("/notes");
     } catch (err) {
       setError("Credenciais inválidas. Tente novamente.");
@@ -26,32 +28,34 @@ export default function LoginPage() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-semibold text-gray-700 text-center mb-4">Login</h2>
+        <h2 className="text-2xl font-semibold text-gray-700 text-center mb-4">
+          Login
+        </h2>
         {error && <p className="text-red-500 text-sm text-center">{error}</p>}
         <form onSubmit={handleLogin} className="space-y-4">
-          <input
+          <Input
+            label="E-mail"
             type="email"
-            placeholder="E-mail"
+            placeholder="Digite seu e-mail"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full text-black"
+            required
           />
-          <input
+          <Input
+            label="Senha"
             type="password"
-            placeholder="Senha"
+            placeholder="Digite sua senha"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full text-black"
+            required
           />
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
-          >
-            Entrar
-          </button>
+          <Button type="submit" text="Entrar" />
         </form>
         <p className="text-sm text-gray-500 text-center mt-4">
-          Não tem uma conta? <a href="/register" className="text-blue-500 hover:underline">Cadastre-se</a>
+          Não tem uma conta?{" "}
+          <a href="/register" className="text-blue-500 hover:underline">
+            Cadastre-se
+          </a>
         </p>
       </div>
     </div>
